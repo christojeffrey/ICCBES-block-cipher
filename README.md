@@ -1,8 +1,17 @@
 # ICCBES-block-cipher
+
 - check [tauri](https://tauri.app/v1/guides/getting-started/setup/qwik)
-- this repository is created using bun. 
+- this repository is created using bun.
 - keyword: qwik, tauri, bun
 
+# how to run in development mode
+
+```bash
+# run this first to install. check bun's website on how to install bun.
+bun install
+
+bun start
+```
 
 # Qwik City App ⚡️
 
@@ -69,4 +78,5 @@ The production build will generate client and server modules by running both cli
 ```shell
 bun build # or `bun build`
 ```
+
 # ICCBES-block-cipher
