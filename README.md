@@ -1,3 +1,9 @@
+# ICCBES-block-cipher
+- check [tauri](https://tauri.app/v1/guides/getting-started/setup/qwik)
+- this repository is created using bun. 
+- keyword: qwik, tauri, bun
+
+
 # Qwik City App ⚡️
 
 - [Qwik Docs](https://qwik.builder.io/)
