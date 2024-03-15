@@ -1,6 +1,6 @@
 package constant
 
-const messageBitSize = 128
+const messageBitSize = 256
 const keyBitSize = 128
 
 const MessageByteSize = messageBitSize/8

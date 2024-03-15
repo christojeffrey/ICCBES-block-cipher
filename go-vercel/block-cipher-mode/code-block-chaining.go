@@ -59,7 +59,7 @@ func DecryptCBC(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 		plainTextBlocks[i] = currentBlock
 
 		// save the previous cipher text
-		previousPlainTextBlock = currentBlock
+		previousPlainTextBlock = cipherTextBlocks[i]
 	}
 
 	// merge blocks into one
