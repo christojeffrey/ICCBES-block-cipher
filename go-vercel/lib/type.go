@@ -1,4 +1,4 @@
 package lib
 
-type EncryptionAlgorithm func([]byte, []byte) []byte
-type DecryptionAlgorithm func([]byte, []byte) []byte
+type EncryptionAlgorithm func(plainText []byte, key []byte) []byte
+type DecryptionAlgorithm func(cipherText []byte, key []byte) []byte

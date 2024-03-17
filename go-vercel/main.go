@@ -18,19 +18,19 @@ func main(){
 	// testing ECB
 	println("=== ECB mode ===")
 
-	cipherText := cipherMode.EncryptECB(message, key, BCA.SimpleEncryptionAlgorithm)
+	cipherText := cipherMode.EncryptECB(message, key, BCA.EncryptionAlgorithm)
 	println("CipherText: ", string(cipherText))
 
-	plainText := cipherMode.DecryptECB(cipherText, key, BCA.SimpleDecryptionAlgorithm)
+	plainText := cipherMode.DecryptECB(cipherText, key, BCA.DecryptionAlgorithm)
 	println("plainText: ", string(plainText))
 	utils.PrintDivider()
 
 	// testing CBC
 	println("=== CBC mode ===")
 	iv := utils.GenerateRandomByte(constant.MessageByteSize)
-	cipherText = cipherMode.EncryptCBC(message, key, BCA.SimpleEncryptionAlgorithm, iv)
+	cipherText = cipherMode.EncryptCBC(message, key, BCA.EncryptionAlgorithm, iv)
 	println("CipherText: ", string(cipherText))
-	plainText = cipherMode.DecryptCBC(cipherText, key, BCA.SimpleDecryptionAlgorithm, iv)
+	plainText = cipherMode.DecryptCBC(cipherText, key, BCA.DecryptionAlgorithm, iv)
 	println("PlainText: ", string(plainText))
 
 }
