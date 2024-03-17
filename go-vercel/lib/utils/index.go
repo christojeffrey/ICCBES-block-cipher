@@ -44,6 +44,18 @@ func DoBitXOR(a []byte, b []byte) []byte {
 	return result
 }
 
+func LeftRotateNTimes(word []byte, n int) []byte {
+	// Left rotate byte order n times
+	for i := 0; i < n; i++ {
+		temp := word[0]
+		for j := 0; j < len(word)-1; j++ {
+			word[j] = word[j+1]
+		}
+		word[len(word)-1] = temp
+	}
+	return word
+}
+
 func PrintDivider() {
 	println("--------------------------------------------------")
 }
