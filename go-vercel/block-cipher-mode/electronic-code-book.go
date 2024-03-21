@@ -7,7 +7,7 @@ import (
 
 func EncryptECB(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
 	// split plainText into blocks
-	plainTextBlocks := utils.TextToBlocks(plainText, len(key))
+	plainTextBlocks := utils.TextToBlocks(plainText)
 	blockLength := len(plainTextBlocks)
 	cipherTextBlocks := make([][]byte, blockLength)
 	for i := 0; i < blockLength; i++ {
@@ -32,7 +32,7 @@ func EncryptECB(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 
 func DecryptECB(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
 	// split cipherText into blocks
-	cipherTextBlocks := utils.TextToBlocks(cipherText, len(key))
+	cipherTextBlocks := utils.TextToBlocks(cipherText)
 	blockLength := len(cipherTextBlocks)
 	plainTextBlocks := make([][]byte, blockLength)
 	for i := 0; i < blockLength; i++ {

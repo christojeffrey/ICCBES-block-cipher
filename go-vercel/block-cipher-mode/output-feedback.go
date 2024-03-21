@@ -6,8 +6,8 @@ import (
 )
 
 func EncryptOFB(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Split plainText into blocks (same size as key)
-	plainTextBlocks := utils.TextToBlocks(plainText, len(key))
+	// Split plainText into blocks
+	plainTextBlocks := utils.TextToBlocks(plainText)
 	blockLength := len(plainTextBlocks)
 	cipherTextBlocks := make([][]byte, blockLength)
 	prevCipherBlock := iv
@@ -37,8 +37,8 @@ func EncryptOFB(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 }
 
 func DecryptOFB(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
-	// Split cipherText into blocks (same size as key)
-	cipherTextBlocks := utils.TextToBlocks(cipherText, len(key))
+	// Split cipherText into blocks
+	cipherTextBlocks := utils.TextToBlocks(cipherText)
 	blockLength := len(cipherTextBlocks)
 	plainTextBlocks := make([][]byte, blockLength)
 	prevCipherBlock := iv

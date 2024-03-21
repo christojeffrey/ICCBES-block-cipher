@@ -9,7 +9,7 @@ import (
 func EncryptCBC(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
 
 	// split plainText into blocks
-	plainTextBlocks := utils.TextToBlocks(plainText, len(key))
+	plainTextBlocks := utils.TextToBlocks(plainText)
 	blockLength := len(plainTextBlocks)
 	cipherTextBlocks := make([][]byte, blockLength)
 	previousCipherTextBlock := iv
@@ -42,7 +42,7 @@ func EncryptCBC(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 // decrypt cipherText with key using CBC mode
 func DecryptCBC(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
 	// split cipherText into blocks
-	cipherTextBlocks := utils.TextToBlocks(cipherText, len(key))
+	cipherTextBlocks := utils.TextToBlocks(cipherText)
 	blockLength := len(cipherTextBlocks)
 	plainTextBlocks := make([][]byte, blockLength)
 	previousPlainTextBlock := iv

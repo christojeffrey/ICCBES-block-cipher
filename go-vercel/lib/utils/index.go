@@ -1,6 +1,9 @@
 package utils
 
-import "math/rand"
+import (
+	"ICCBES/lib/constant"
+	"math/rand"
+)
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -14,7 +17,8 @@ func GenerateRandomByte(n int) []byte {
 }
 
 // split either plaintext or ciphertext into blocks. if there are leftover, fill with 0
-func TextToBlocks(text []byte, blockSize int) [][]byte {
+func TextToBlocks(text []byte) [][]byte {
+	blockSize := constant.MessageBlockByteSize
 	fillerByte := byte(0)
 	// ceiling
 	blockLength := (len(text) + blockSize - 1) / blockSize

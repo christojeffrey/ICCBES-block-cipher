@@ -9,8 +9,8 @@ func EncryptCTR(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 	// Initialize counter (can be a byte slice or integer)
 	counter := iv
 
-	// Split plainText into blocks (same size as key)
-	plainTextBlocks := utils.TextToBlocks(plainText, len(key))
+	// Split plainText into blocks 
+	plainTextBlocks := utils.TextToBlocks(plainText)
 	blockLength := len(plainTextBlocks)
 	cipherTextBlocks := make([][]byte, blockLength)
 
@@ -41,8 +41,8 @@ func EncryptCTR(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 }
 
 func DecryptCTR(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
-	// Split cipherText into blocks (same size as key)
-	cipherTextBlocks := utils.TextToBlocks(cipherText, len(key))
+	// Split cipherText into blocks 
+	cipherTextBlocks := utils.TextToBlocks(cipherText)
 	blockLength := len(cipherTextBlocks)
 	plainTextBlocks := make([][]byte, blockLength)
 	counter := iv
