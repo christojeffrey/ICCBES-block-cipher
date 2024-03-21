@@ -23,13 +23,17 @@ func TextToBlocks(text []byte) [][]byte {
 	// ceiling
 	blockLength := (len(text) + blockSize - 1) / blockSize
 	blocks := make([][]byte, blockLength)
+	totalSize := constant.MessageBlockByteSize * blockLength
+
+	counter := 0
 	for i := 0; i < blockLength; i++ {
 		// setup block to be encrypted
 		// if block is not full, fill with 0
 		block := make([]byte, blockSize)
 		for j := 0; j < blockSize; j++ {
-			if i*blockSize+j < len(text) {
-				block[j] = text[i*blockSize+j]
+			if totalSize - (i*blockSize+j) <= len(text) {
+				block[j] = text[counter]
+				counter++
 			} else {
 				block[j] = fillerByte
 			}
@@ -64,17 +68,14 @@ func PrintDivider() {
 	println("--------------------------------------------------")
 }
 
-func MergeBlocksIntoOneString(blocks [][]byte, outputTextLength int) []byte{
+func MergeBlocksIntoOneString(blocks [][]byte) []byte{
 	// merge blocks into one
-	outputText := make([]byte, outputTextLength)
+	outputText := make([]byte, len(blocks) * constant.MessageBlockByteSize)
 
-	for p := 0; p < outputTextLength; p++ {
+	for p := 0; p < len(blocks) * constant.MessageBlockByteSize; p++ {
 		i := p / constant.MessageBlockByteSize;
 		j := p % constant.MessageBlockByteSize;
 		outputText[p] = blocks[i][j];
-		// print everybyte
-		println(i,j)
-		println(string(blocks[i][j]))
 				
 	}
 	return outputText

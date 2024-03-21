@@ -30,7 +30,7 @@ func EncryptCFB(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 	}
 
 	// Merge blocks into one
-	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
+	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks);
 
 	return cipherText
 }
@@ -56,7 +56,7 @@ func DecryptCFB(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 	}
 
 	// Merge blocks into one
-	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText));
+	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks);
 	return plainText
 }
 
