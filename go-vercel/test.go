@@ -9,7 +9,7 @@ import (
 	"ICCBES/lib/utils"
 )
 
-func main() {
+func test() {
 	key := utils.GenerateRandomByte(constant.KeyByteSize)
 	message := utils.GenerateRandomByte(constant.MessageByteSize)
 

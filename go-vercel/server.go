@@ -10,24 +10,29 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func temp() {
+func main() {
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	e.POST("/api/:mode/encrypt", func(c echo.Context) error {
-		mode := c.Param("mode")
+	e.POST("/api/:blockCipherMode/:decryptionMode", func(c echo.Context) error {
+		blockCipherMode := c.Param("blockCipherMode")
+		decryptionMode := c.Param("decryptionMode")
 
 		// validate mode
-		validModes := []string{"ecb", "cbc", "cfb", "ofb", "ctr"}
+		validModes := []string{"ecb", "cbc"}
 		isValidMode := false
 		for _, validMode := range validModes {
-			if mode == validMode {
+			if blockCipherMode == validMode {
 				isValidMode = true
 				break
 			}
 		}
+		if(decryptionMode != "encrypt" && decryptionMode != "decrypt"){
+			return c.JSON(http.StatusBadRequest, "invalid mode. must be encrypt or decrypt")
+		}
+
 		if !isValidMode {
 			return c.JSON(http.StatusBadRequest, "invalid mode. valid modes: ecb, cbc, cfb, ofb, ctr")
 		}
@@ -38,8 +43,11 @@ func temp() {
 		}
 		var result map[string]interface{}
 		// give to handler
-		if(mode == "cbc") {
-			result = handler.CBCHandler("encrypt", jsonBody)
+		if(blockCipherMode == "cbc") {
+			result = handler.CBCHandler(decryptionMode, jsonBody)
+		}
+		if(blockCipherMode == "ecb") {
+			result = handler.ECBHandler(decryptionMode, jsonBody)
 		}
 		
 

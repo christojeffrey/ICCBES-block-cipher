@@ -2,6 +2,7 @@ package utils
 
 import (
 	"ICCBES/lib/constant"
+	"encoding/base64"
 	"math/rand"
 )
 
@@ -14,6 +15,17 @@ func GenerateRandomByte(n int) []byte {
         b[i] = letterBytes[rand.Intn(len(letterBytes))]
     }
 	return b
+}
+
+func TransmissionEncoding(text []byte) string{
+	// return string(text)
+	return base64.StdEncoding.EncodeToString(text)
+}
+func TransmissionDecoding(text string) []byte{
+	// return []byte(text)
+	decoded, _ := base64.StdEncoding.DecodeString(text)
+	println("decoded: ", string(decoded))
+	return decoded
 }
 
 // split either plaintext or ciphertext into blocks. if there are leftover, fill with 0
@@ -68,15 +80,28 @@ func PrintDivider() {
 	println("--------------------------------------------------")
 }
 
-func MergeBlocksIntoOneString(blocks [][]byte) []byte{
+func MergeBlocksIntoOneString(blocks [][]byte, outputTextLength int) []byte{
 	// merge blocks into one
-	outputText := make([]byte, len(blocks) * constant.MessageBlockByteSize)
+	outputText := make([]byte, constant.MessageBlockByteSize * len(blocks))
 
-	for p := 0; p < len(blocks) * constant.MessageBlockByteSize; p++ {
+	for p := 0; p < constant.MessageBlockByteSize * len(blocks); p++ {
 		i := p / constant.MessageBlockByteSize;
 		j := p % constant.MessageBlockByteSize;
-		outputText[p] = blocks[i][j];
-				
+		outputText[p] = blocks[i][j];			
 	}
-	return outputText
+
+	// remove byte(0) in front of the outputText
+	newOutputText := make([]byte, outputTextLength)
+	// find start from
+	startFrom := 0
+	for i := 0; i < len(outputText); i++ {
+		if outputText[i] != byte(0) {
+			startFrom = i
+			break
+		}
+	}
+	newOutputText = outputText[startFrom:]
+	// return the result
+	return newOutputText
+
 }

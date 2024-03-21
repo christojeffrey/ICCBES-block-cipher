@@ -31,7 +31,7 @@ func EncryptCBC(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 	}
 
 	// merge blocks into one
-	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks);
+	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
 
 	return cipherText
 }
@@ -59,6 +59,6 @@ func DecryptCBC(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 	}
 
 	// merge blocks into one
-	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks);
+	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText))
 	return plainText
 }
