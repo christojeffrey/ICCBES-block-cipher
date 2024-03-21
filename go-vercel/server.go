@@ -7,11 +7,16 @@ import (
 	"ICCBES/handler"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
 
 func main() {
+
 	e := echo.New()
+
+	// Middleware
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{}))
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
