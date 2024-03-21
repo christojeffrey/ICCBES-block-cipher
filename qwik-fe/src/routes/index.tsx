@@ -1,112 +1,83 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, createContextId, useStore, useContextProvider, useContext } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 
-import Counter from "../components/starter/counter/counter";
-import Hero from "../components/starter/hero/hero";
-import Infobox from "../components/starter/infobox/infobox";
-import Starter from "../components/starter/next-steps/next-steps";
-
+// Declare a context ID
+export const CTX = createContextId<{ type: string; value: string }>("inputText");
 export default component$(() => {
+  const input = useStore({ type: "text", value: "" });
+  useContextProvider(CTX, input);
   return (
     <>
-      <Hero />
-      <Starter />
+      <div class="md:h-screen flex flex-col p-3 gap-3">
+        <AppHeader />
 
-      <div role="presentation" class="ellipsis"></div>
-      <div role="presentation" class="ellipsis ellipsis-purple"></div>
-
-      <div class="container container-center container-spacing-xl">
-        <h3>
-          You can <span class="highlight">count</span>
-          <br /> on me
-        </h3>
-        <Counter />
-      </div>
-
-      <div class="container container-flex">
-        <Infobox>
-          <div q:slot="title" class="icon icon-cli">
-            CLI Commands
-          </div>
-          <>
-            <p>
-              <code>npm run dev</code>
-              <br />
-              Starts the development server and watches for changes
-            </p>
-            <p>
-              <code>npm run preview</code>
-              <br />
-              Creates production build and starts a server to preview it
-            </p>
-            <p>
-              <code>npm run build</code>
-              <br />
-              Creates production build
-            </p>
-            <p>
-              <code>npm run qwik add</code>
-              <br />
-              Runs the qwik CLI to add integrations
-            </p>
-          </>
-        </Infobox>
-
-        <div>
-          <Infobox>
-            <div q:slot="title" class="icon icon-apps">
-              Example Apps
-            </div>
-            <p>
-              Have a look at the <a href="/demo/flower">Flower App</a> or the{" "}
-              <a href="/demo/todolist">Todo App</a>.
-            </p>
-          </Infobox>
-
-          <Infobox>
-            <div q:slot="title" class="icon icon-community">
-              Community
-            </div>
-            <ul>
-              <li>
-                <span>Questions or just want to say hi? </span>
-                <a href="https://qwik.builder.io/chat" target="_blank">
-                  Chat on discord!
-                </a>
-              </li>
-              <li>
-                <span>Follow </span>
-                <a href="https://twitter.com/QwikDev" target="_blank">
-                  @QwikDev
-                </a>
-                <span> on Twitter</span>
-              </li>
-              <li>
-                <span>Open issues and contribute on </span>
-                <a href="https://github.com/BuilderIO/qwik" target="_blank">
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <span>Watch </span>
-                <a href="https://qwik.builder.io/media/" target="_blank">
-                  Presentations, Podcasts, Videos, etc.
-                </a>
-              </li>
-            </ul>
-          </Infobox>
+        <div class="border-2 flex flex-col md:flex-row md:justify-between p-3 gap-3 bg-gray-100 rounded-2xl flex-grow">
+          {/* three section. left middle right. left for input, middle for configuration, right for output */}
+          <InputBox />
+          <ConfigBox />
+          <OutputBox />
         </div>
       </div>
     </>
   );
 });
+const InputBox = component$(() => {
+  const input = useContext(CTX);
+  return (
+    <>
+      <div class="min-h-[25vh] md:h-full md:w-1/3 rounded-2xl bg-white p-3">
+        {/* heading */}
+        <div>input box</div>
+        <input
+          type="text"
+          value={input.value}
+          placeholder="tesadsf"
+          class="border-2 border-black"
+          onChange$={(e) => {
+            input.value = (e.target as HTMLInputElement).value;
+          }}
+        ></input>
+      </div>
+    </>
+  );
+});
 
+const ConfigBox = component$(() => {
+  return (
+    <>
+      <div class="min-h-[25vh] md:h-full md:w-1/3 rounded-2xl bg-white p-3">config box</div>
+    </>
+  );
+});
+const OutputBox = component$(() => {
+  return (
+    <>
+      <div class="min-h-[25vh] md:h-full md:w-1/3 rounded-2xl bg-white p-3">output box</div>
+    </>
+  );
+});
+
+function AppHeader() {
+  return (
+    <div class="flex justify-between">
+      <div>
+        <p class="text-xl">ICCBES Cipher</p>
+        <p class="text-md">Next AES</p>
+      </div>
+      <div class="text-right text-sm">
+        <div>
+          <a href="https://github.com/christojeffrey">@christojeffrey</a>
+        </div>
+      </div>
+    </div>
+  );
+}
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: "ICCBES",
   meta: [
     {
       name: "description",
-      content: "Qwik site description",
+      content: "ICCBES description",
     },
   ],
 };
