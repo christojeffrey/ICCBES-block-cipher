@@ -63,3 +63,19 @@ func LeftRotateNTimes(word []byte, n int) []byte {
 func PrintDivider() {
 	println("--------------------------------------------------")
 }
+
+func MergeBlocksIntoOneString(blocks [][]byte, outputTextLength int) []byte{
+	// merge blocks into one
+	outputText := make([]byte, outputTextLength)
+
+	for p := 0; p < outputTextLength; p++ {
+		i := p / constant.MessageBlockByteSize;
+		j := p % constant.MessageBlockByteSize;
+		outputText[p] = blocks[i][j];
+		// print everybyte
+		println(i,j)
+		println(string(blocks[i][j]))
+				
+	}
+	return outputText
+}

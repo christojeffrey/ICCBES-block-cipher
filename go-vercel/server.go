@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func main() {
+func temp() {
 	e := echo.New()
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")

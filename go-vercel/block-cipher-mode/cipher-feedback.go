@@ -30,12 +30,8 @@ func EncryptCFB(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 	}
 
 	// Merge blocks into one
-	cipherText := make([]byte, len(plainText))
-	for i := 0; i < blockLength; i++ {
-		for j := 0; j < len(key); j++ {
-			cipherText[i*len(key)+j] = cipherTextBlocks[i][j]
-		}
-	}
+	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
+
 	return cipherText
 }
 
@@ -60,12 +56,7 @@ func DecryptCFB(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 	}
 
 	// Merge blocks into one
-	plainText := make([]byte, len(cipherText))
-	for i := 0; i < blockLength; i++ {
-		for j := 0; j < len(key); j++ {
-			plainText[i*len(key)+j] = plainTextBlocks[i][j]
-		}
-	}
+	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText));
 	return plainText
 }
 

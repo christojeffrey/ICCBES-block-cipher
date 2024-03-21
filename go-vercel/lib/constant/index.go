@@ -1,6 +1,6 @@
 package constant
 
-const messageBitSize = 512
+const messageBitSize = 16
 const messageBlockBitSize = 128
 const keyBitSize = 128
 // key bit size has to be larger than message block bit size
