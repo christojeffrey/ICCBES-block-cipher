@@ -2,11 +2,10 @@ package blockCipherMode
 
 import (
 	"ICCBES/lib"
-	"ICCBES/lib/encryption_algorithm"
 	"ICCBES/lib/utils"
 )
 
-func EncryptCTR(plainText []byte, key []byte, encryptionAlgorithm encryption_algorithm.EncryptionAlgorithm, iv []byte) []byte {
+func EncryptCTR(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
 	// Initialize counter (can be a byte slice or integer)
 	counter := iv
 
@@ -19,7 +18,7 @@ func EncryptCTR(plainText []byte, key []byte, encryptionAlgorithm encryption_alg
 		currentBlock := plainTextBlocks[i]
 
 		// Generate keystream (encrypt counter)
-		keystream := encryptCTRBlock(counter, key)
+		keystream := encryptCTRBlock(counter, encryptionAlgorithm)
 
 		// Encrypt block using XOR with keystream
 		currentBlock = utils.DoBitXOR(currentBlock, keystream)
@@ -52,7 +51,7 @@ func DecryptCTR(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 		currentBlock := cipherTextBlocks[i]
 
 		// Generate keystream (encrypt counter)
-		keystream := encryptCTRBlock(counter, encryptionAlgorithm)
+		keystream := decryptCTRBlock(counter, decryptionAlgorithm)
 
 		// Decrypt block using XOR with keystream
 		currentBlock = utils.DoBitXOR(currentBlock, keystream)
@@ -74,9 +73,16 @@ func DecryptCTR(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 	return plainText
 }
 
-func encryptCTRBlock(counter []byte, encryptionAlgorithm encryption_algorithm.EncryptionAlgorithm) []byte {
+func encryptCTRBlock(counter []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
 	// Encrypt the counter block
 	encryptedBlock := encryptionAlgorithm(counter, []byte{})
+
+	// Return the entire encrypted block as keystream
+	return encryptedBlock
+}
+func decryptCTRBlock(counter []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
+	// Encrypt the counter block
+	encryptedBlock := decryptionAlgorithm(counter, []byte{})
 
 	// Return the entire encrypted block as keystream
 	return encryptedBlock

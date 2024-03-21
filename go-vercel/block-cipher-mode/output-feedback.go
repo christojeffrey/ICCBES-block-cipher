@@ -2,11 +2,10 @@ package blockCipherMode
 
 import (
 	"ICCBES/lib" // Likely incorrect, replace with the actual package name
-	"ICCBES/lib/encryption_algorithm"
 	"ICCBES/lib/utils"
 )
 
-func EncryptOFB(plainText []byte, key []byte, encryptionAlgorithm encryption_algorithm.EncryptionAlgorithm, iv []byte) []byte {
+func EncryptOFB(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
 	// Split plainText into blocks (same size as key)
 	plainTextBlocks := utils.TextToBlocks(plainText, len(key))
 	blockLength := len(plainTextBlocks)
@@ -48,7 +47,7 @@ func DecryptOFB(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 		currentBlock := cipherTextBlocks[i]
 
 		// Generate keystream (entire encrypted previous block)
-		keystream := encryptOFBBlock(prevCipherBlock, encryptionAlgorithm)
+		keystream := decryptOFBBlock(prevCipherBlock, decryptionAlgorithm)
 
 		// Decrypt block using XOR with keystream
 		currentBlock = utils.DoBitXOR(currentBlock, keystream)
@@ -68,9 +67,16 @@ func DecryptOFB(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 	return plainText
 }
 
-func encryptOFBBlock(prevCipherBlock []byte, encryptionAlgorithm encryption_algorithm.EncryptionAlgorithm) []byte {
+func encryptOFBBlock(prevCipherBlock []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
 	// Encrypt previous cipher block
 	encryptedBlock := encryptionAlgorithm(prevCipherBlock, []byte{})
+
+	// Return entire encrypted block as keystream
+	return encryptedBlock
+}
+func decryptOFBBlock(prevCipherBlock []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
+	// Encrypt previous cipher block
+	encryptedBlock := decryptionAlgorithm(prevCipherBlock, []byte{})
 
 	// Return entire encrypted block as keystream
 	return encryptedBlock

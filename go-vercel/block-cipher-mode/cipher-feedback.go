@@ -49,7 +49,7 @@ func DecryptCFB(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 		currentBlock := cipherTextBlocks[i]
 
 		// Generate keystream
-		keystream := encryptCFBBlock(prevCipherBlock, key)
+		keystream := decryptCFBBlock(prevCipherBlock, decryptionAlgorithm)
 
 		// Decrypt block
 		currentBlock = utils.DoBitXOR(currentBlock, keystream)
@@ -72,6 +72,13 @@ func DecryptCFB(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 func encryptCFBBlock(prevCipherBlock []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
 	// Encrypt previous cipher block
 	encryptedBlock := encryptionAlgorithm(prevCipherBlock, []byte{})
+
+	// Return first N bits of encrypted block
+	return encryptedBlock[:len(prevCipherBlock)]
+}
+func decryptCFBBlock(prevCipherBlock []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
+	// Encrypt previous cipher block
+	encryptedBlock := decryptionAlgorithm(prevCipherBlock, []byte{})
 
 	// Return first N bits of encrypted block
 	return encryptedBlock[:len(prevCipherBlock)]
