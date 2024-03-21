@@ -6,10 +6,10 @@ const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func GenerateRandomByte(n int) []byte {
 	// return random letter as byte with the size of n
-    b := make([]byte, n)
-    for i := range b {
-        b[i] = letterBytes[rand.Intn(len(letterBytes))]
-    }
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
 	return b
 }
 
@@ -58,4 +58,14 @@ func LeftRotateNTimes(word []byte, n int) []byte {
 
 func PrintDivider() {
 	println("--------------------------------------------------")
+}
+
+func IncrementCounter(counter []byte) {
+	// Find the rightmost non-maximum byte and increment it by one
+	for i := len(counter) - 1; i >= 0; i-- {
+		if counter[i] < 0xff {
+			counter[i]++
+			break
+		}
+	}
 }

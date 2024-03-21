@@ -7,8 +7,7 @@ import (
 	"ICCBES/lib/utils"
 )
 
-
-func main(){
+func main() {
 	key := utils.GenerateRandomByte(constant.KeyByteSize)
 	message := utils.GenerateRandomByte(constant.MessageByteSize)
 	println("Key: ", string(key))
@@ -33,9 +32,30 @@ func main(){
 	plainText = cipherMode.DecryptCBC(cipherText, key, BCA.DecryptionAlgorithm, iv)
 	println("PlainText: ", string(plainText))
 
+	// Testing CFB
+	println("=== CFB mode ===")
+	iv = utils.GenerateRandomByte(constant.MessageByteSize)
+	cipherText = cipherMode.EncryptCFB(message, key, BCA.EncryptionAlgorithm, iv)
+	println("CipherText: ", string(cipherText))
+	plainText = cipherMode.DecryptCFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	println("PlainText: ", string(plainText))
+	utils.PrintDivider()
+
+	// Testing Counter
+	println("=== Counter mode ===")
+	nonce := utils.GenerateRandomByte(constant.MessageByteSize)
+	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, nonce)
+	println("CipherText: ", string(cipherText))
+	plainText = cipherMode.DecryptCounter(cipherText, key, BCA.DecryptionAlgorithm, nonce)
+	println("PlainText: ", string(plainText))
+	utils.PrintDivider()
+
+	// Testing OFB
+	println("=== OFB mode ===")
+	iv = utils.GenerateRandomByte(constant.MessageByteSize)
+	cipherText = cipherMode.EncryptOFB(message, key, BCA.EncryptionAlgorithm, iv)
+	println("CipherText: ", string(cipherText))
+	plainText = cipherMode.DecryptOFB(cipherText, key, BCA.EncryptionAlgorithm, iv)
+	println("PlainText: ", string(plainText))
+	utils.PrintDivider()
 }
-
-
-
-
-
