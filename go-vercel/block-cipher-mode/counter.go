@@ -6,12 +6,11 @@ import (
 )
 
 // EncryptCTR encrypts plaintext using CTR mode. decrypt and encrypt is the same in counter mode
-func EncryptCounter(inputText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, counter []byte) []byte {
+func EncryptCounter(inputText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, counter []byte) []byte {	
 	// split inputText into blocks
 	inputTextBlocks := utils.TextToBlocks(inputText)
 	blockLength := len(inputTextBlocks)
 	outputTextBlocks := make([][]byte, blockLength)
-	// deep copy counter
 	encryptedCounter := counter
 	for i := 0; i < blockLength; i++ {
 		// encrypt counter with key
@@ -23,6 +22,7 @@ func EncryptCounter(inputText []byte, key []byte, encryptionAlgorithm lib.Encryp
 	}
 	// merge blocks into one
 	outputText := utils.MergeBlocksIntoOneString(outputTextBlocks, len(inputText))
+	println("outputText: ", string(outputText))
 	return outputText
 }
 

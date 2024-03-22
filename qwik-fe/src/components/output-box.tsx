@@ -80,13 +80,22 @@ export const OutputBox = component$(() => {
                   })}
                   {/* save as file */}
                   <button
-                    class="border-2 mt-4 hover:shadow hover:bg-gray-50"
+                    class="border-2 mt-4 hover:shadow hover:bg-gray-50 p-2 border-black rounded-md"
                     onClick$={() => {
                       onDownload(atob(result.result));
                     }}
                   >
                     Save as file
                   </button>
+                  {/* copy. commented because the text in clipboard sometimes return a different character compared to when saved as file */}
+                  {/* <button
+                    class="border-2 mt-4 hover:shadow hover:bg-gray-50 p-2 border-black rounded-md"
+                    onClick$={() => {
+                      navigator.clipboard.writeText(atob(result.result));
+                    }}
+                  >
+                    Copy
+                  </button> */}
                 </>
               )}
             </>

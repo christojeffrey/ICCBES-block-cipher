@@ -9,9 +9,9 @@ import (
 	"ICCBES/lib/utils"
 )
 
-func test() {
-	key := utils.GenerateRandomByte(constant.KeyByteSize)
-	message := utils.GenerateRandomByte(constant.MessageByteSize)
+func main() {
+	key := []byte("qRdzCwMSbsCiJbfG")
+	message := []byte("11231213412312321")
 
 	fmt.Println("Key:", string(key))
 	fmt.Println("Message:", string(message))
@@ -55,7 +55,7 @@ func test() {
 
 	// Testing CTR
 	fmt.Println("=== CTR mode ===")
-	counter := utils.GenerateRandomByte(constant.MessageBlockByteSize) 
+	counter := []byte("EpzOiatYJaRobAfX")
 	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, counter) // in CTR, encryption and decryption are the same
 	fmt.Println("CipherText:", string(cipherText))
 	plainText = cipherMode.EncryptCounter(cipherText, key, BCA.EncryptionAlgorithm, counter)
