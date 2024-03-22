@@ -37,10 +37,10 @@ func main() {
 
 	// Testing CFB
 	fmt.Println("=== CFB mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize)
 	cipherText = cipherMode.EncryptCFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.DecryptCFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	plainText = cipherMode.DecryptCFB(cipherText, key, BCA.EncryptionAlgorithm, iv) // in CFB, both encryption and decryption uses encryption algorithm 
 	fmt.Println("PlainText:", string(plainText))
 	utils.PrintDivider()
 
@@ -49,7 +49,7 @@ func main() {
 	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for OFB)
 	cipherText = cipherMode.EncryptOFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.DecryptOFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	plainText = cipherMode.EncryptOFB(cipherText, key, BCA.EncryptionAlgorithm, iv) // in OFB, encryption and decryption are the same
 	fmt.Println("PlainText:", string(plainText))
 	utils.PrintDivider()
 
@@ -58,6 +58,6 @@ func main() {
 	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for CTR)
 	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.DecryptCounter(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	plainText = cipherMode.EncryptCounter(cipherText, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("PlainText:", string(plainText))
 }
