@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"ICCBES/handler"
 
@@ -50,7 +49,6 @@ func main() {
 		var result map[string]interface{}
 		// give to handler
 		// time the algorithm
-		timeElapsed := time.Now().UnixMilli()
 		if(blockCipherMode == "cbc" || blockCipherMode == "cfb" || blockCipherMode == "ofb") {
 			result = handler.CbcOfbCfbHandler(blockCipherMode, decryptionMode, jsonBody)
 		}else if(blockCipherMode == "ecb") {
@@ -58,9 +56,6 @@ func main() {
 		}else { // counter
 			result = handler.CounterHandler(decryptionMode, jsonBody)
 		}
-		timeElapsed = time.Now().UnixMilli() - timeElapsed
-		result["timeElapsed"] = timeElapsed
-
 		
 
 		return c.JSON(http.StatusOK, result)
