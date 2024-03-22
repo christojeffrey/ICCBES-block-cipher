@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"ICCBES/handler"
 
@@ -11,7 +12,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func te() {
+func main() {
 
 	e := echo.New()
 
@@ -48,16 +49,18 @@ func te() {
 		}
 		var result map[string]interface{}
 		// give to handler
+		// time the algorithm
+		timeElapsed := time.Now().UnixMilli()
 		if(blockCipherMode == "cbc") {
 			result = handler.CBCHandler(decryptionMode, jsonBody)
 		}
 		if(blockCipherMode == "ecb") {
 			result = handler.ECBHandler(decryptionMode, jsonBody)
 		}
-		
+		timeElapsed = time.Now().UnixMilli() - timeElapsed
+		result["timeElapsed"] = timeElapsed
 
 		return c.JSON(http.StatusOK, result)
-
 	})
 
 	e.Logger.Fatal(e.Start(":1323"))
