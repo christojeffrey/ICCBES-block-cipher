@@ -26,7 +26,7 @@ export const OutputBox = component$(() => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ text: input.value, ...modeSpecificConfig, autofill: config.autofill }),
+      body: JSON.stringify({ text: btoa(input.value), autofill: config.autofill, ...modeSpecificConfig }),
     });
 
     const data = await response.json();
@@ -51,9 +51,11 @@ export const OutputBox = component$(() => {
                   <p>key: {result.key}</p>
                   {[...Object.keys(result)].map((key: string) => {
                     if (key !== "result" && key !== "key") {
-                      <p>
-                        {key}: {result[key as keyof typeof result]}
-                      </p>;
+                      return (
+                        <p key={key}>
+                          {key}: {result[key as keyof typeof result]}
+                        </p>
+                      );
                     }
                   })}
                 </>
