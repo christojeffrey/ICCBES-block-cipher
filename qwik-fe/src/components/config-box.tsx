@@ -23,6 +23,7 @@ export const ConfigBox = component$(() => {
           <option value="ecb">ECB</option>
           <option value="ofb">OFB</option>
           <option value="cfb">CFB</option>
+          <option value="ctr">Counter</option>
         </select>
         {/* encryption mode */}
         <select
@@ -44,11 +45,8 @@ export const ConfigBox = component$(() => {
           <input type="text" class="border-2 border-black p-2 rounded-md" onChange$={(e) => (modeSpecificConfig.key = (e.target as HTMLInputElement).value)} />
         </div>
         {/* mode specific config */}
-        {config.blockCipherMode === "cbc" && <CBCConfig />}
-        {config.blockCipherMode === "ecb" && <ECBConfig />}
-        {config.blockCipherMode === "ofb" && <OFBConfig />}
-        {config.blockCipherMode === "cfb" && <CFBConfig />}
-        {config.blockCipherMode === "counter" && <CounterConfig />}
+        {config.blockCipherMode === "cbc" || config.blockCipherMode === "ofb" || config.blockCipherMode === "cfb" ? <CbcOfbCfbConfig /> : null}
+        {config.blockCipherMode === "ctr" && <CounterConfig />}
         {/* run button */}
         <button
           class="bg-blue-500 text-white p-2 rounded-md"
@@ -64,13 +62,11 @@ export const ConfigBox = component$(() => {
   );
 });
 
-const CBCConfig = component$(() => {
+const CbcOfbCfbConfig = component$(() => {
   const modeSpecificConfig = useContext(modeSpecificConfigContext);
 
   return (
     <div>
-      {/* title */}
-      CBC Config
       {/* configs */}
       <div>
         <label>IV</label>
@@ -80,18 +76,18 @@ const CBCConfig = component$(() => {
   );
 });
 
-// TODO: complete below
-const ECBConfig = component$(() => {
-  return <div>ECB Config</div>;
-});
-const OFBConfig = component$(() => {
-  return <div>OFB Config</div>;
-});
-const CFBConfig = component$(() => {
-  return <div>CFB Config</div>;
-});
 const CounterConfig = component$(() => {
-  return <div>Counter Config</div>;
+  const modeSpecificConfig = useContext(modeSpecificConfigContext);
+
+  return (
+    <div>
+      {/* configs */}
+      <div>
+        <label>counter</label>
+        <input type="text" class="border-2 border-black p-2 rounded-md" onChange$={(e) => (modeSpecificConfig.counter = (e.target as HTMLInputElement).value)} />
+      </div>
+    </div>
+  );
 });
 
 export default ConfigBox;
