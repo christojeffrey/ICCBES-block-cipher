@@ -3,10 +3,12 @@ package blockCipherMode
 import (
 	"ICCBES/lib"
 	"ICCBES/lib/utils"
+	"time"
 )
 
 // EncryptCTR encrypts plaintext using CTR mode. decrypt and encrypt is the same in counter mode
 func EncryptCounter(inputText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, counter []byte) []byte {	
+	startTime := time.Now()
 	// split inputText into blocks
 	inputTextBlocks := utils.TextToBlocks(inputText)
 	blockLength := len(inputTextBlocks)
@@ -23,6 +25,9 @@ func EncryptCounter(inputText []byte, key []byte, encryptionAlgorithm lib.Encryp
 	// merge blocks into one
 	outputText := utils.MergeBlocksIntoOneString(outputTextBlocks, len(inputText))
 	println("outputText: ", string(outputText))
+
+	elapsedTime := time.Since(startTime)
+	println("elapsed time EncryptCounter in ns: ", elapsedTime.Nanoseconds())
 	return outputText
 }
 

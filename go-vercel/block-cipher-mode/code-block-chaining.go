@@ -3,11 +3,12 @@ package blockCipherMode
 import (
 	"ICCBES/lib"
 	"ICCBES/lib/utils"
+	"time"
 )
 
 // encrypt plainText with key using CBC mode
 func EncryptCBC(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-
+	startTime := time.Now()
 	// split plainText into blocks
 	plainTextBlocks := utils.TextToBlocks(plainText)
 	blockLength := len(plainTextBlocks)
@@ -33,10 +34,13 @@ func EncryptCBC(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 	// merge blocks into one
 	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
 
+	elapsedTime := time.Since(startTime)
+	println("elapsed time EncryptCBC in ns: ", elapsedTime.Nanoseconds())
 	return cipherText
 }
 // decrypt cipherText with key using CBC mode
 func DecryptCBC(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
+	startTime := time.Now()
 	// split cipherText into blocks
 	cipherTextBlocks := utils.TextToBlocks(cipherText)
 	blockLength := len(cipherTextBlocks)
@@ -60,5 +64,8 @@ func DecryptCBC(cipherText []byte, key []byte, decryptionAlgorithm lib.Decryptio
 
 	// merge blocks into one
 	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText))
+
+	elapsedTime := time.Since(startTime)
+	println("elapsed time DecryptCBC in ns: ", elapsedTime.Nanoseconds())
 	return plainText
 }
