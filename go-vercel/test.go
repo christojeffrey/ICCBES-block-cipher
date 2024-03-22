@@ -9,7 +9,7 @@ import (
 	"ICCBES/lib/utils"
 )
 
-func main() {
+func test() {
 	key := utils.GenerateRandomByte(constant.KeyByteSize)
 	message := utils.GenerateRandomByte(constant.MessageByteSize)
 
@@ -46,7 +46,7 @@ func main() {
 
 	// Testing OFB
 	fmt.Println("=== OFB mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for OFB)
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize)
 	cipherText = cipherMode.EncryptOFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
 	plainText = cipherMode.EncryptOFB(cipherText, key, BCA.EncryptionAlgorithm, iv) // in OFB, encryption and decryption are the same
@@ -55,9 +55,9 @@ func main() {
 
 	// Testing CTR
 	fmt.Println("=== CTR mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for CTR)
-	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, iv)
+	counter := utils.GenerateRandomByte(constant.MessageBlockByteSize) 
+	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, counter) // in CTR, encryption and decryption are the same
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.EncryptCounter(cipherText, key, BCA.EncryptionAlgorithm, iv)
+	plainText = cipherMode.EncryptCounter(cipherText, key, BCA.EncryptionAlgorithm, counter)
 	fmt.Println("PlainText:", string(plainText))
 }

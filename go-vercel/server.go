@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func te() {
+func main() {
 
 	e := echo.New()
 
@@ -26,7 +26,7 @@ func te() {
 		decryptionMode := c.Param("decryptionMode")
 
 		// validate mode
-		validModes := []string{"ecb", "cbc"}
+		validModes := []string{"ecb", "cbc", "cfb", "ofb", "ctr"}
 		isValidMode := false
 		for _, validMode := range validModes {
 			if blockCipherMode == validMode {
@@ -48,12 +48,14 @@ func te() {
 		}
 		var result map[string]interface{}
 		// give to handler
-		if(blockCipherMode == "cbc") {
-			result = handler.CBCHandler(decryptionMode, jsonBody)
-		}
-		if(blockCipherMode == "ecb") {
+		if(blockCipherMode == "cbc" || blockCipherMode == "cfb" || blockCipherMode == "ofb") {
+			result = handler.CbcOfbCfbHandler(blockCipherMode, decryptionMode, jsonBody)
+		}else if(blockCipherMode == "ecb") {
 			result = handler.ECBHandler(decryptionMode, jsonBody)
+		}else { // counter
+			result = handler.CounterHandler(decryptionMode, jsonBody)
 		}
+
 		
 
 		return c.JSON(http.StatusOK, result)
