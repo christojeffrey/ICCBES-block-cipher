@@ -9,9 +9,14 @@ export default component$(() => {
       </div>
       <div class="text-right text-sm">
         <div>
+          <a href="https://github.com/RFahrezaaa">@RFahrezaaa</a>
+        </div>
+        <div>
+          <a href="https://github.com/Adityapnn811">@Adityapnn811</a>
+        </div>
+        <div>
           <a href="https://github.com/christojeffrey">@christojeffrey</a>
         </div>
-        {/* TODO: add adit and rafi */}
       </div>
     </div>
   );
