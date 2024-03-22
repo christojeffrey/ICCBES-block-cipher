@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func main() {
+func te() {
 
 	e := echo.New()
 

@@ -15,7 +15,7 @@ func EncryptCBC(plainText []byte, key []byte, encryptionAlgorithm lib.Encryption
 	previousCipherTextBlock := iv
 	for i := 0; i < blockLength; i++ {
 		currentBlock := plainTextBlocks[i]
-		
+
 
 		// XOR with previous cipher text
 		currentBlock = utils.DoBitXOR(currentBlock, previousCipherTextBlock)

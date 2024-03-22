@@ -9,7 +9,7 @@ import (
 	"ICCBES/lib/utils"
 )
 
-func test() {
+func main() {
 	key := utils.GenerateRandomByte(constant.KeyByteSize)
 	message := utils.GenerateRandomByte(constant.MessageByteSize)
 
@@ -27,7 +27,8 @@ func test() {
 
 	// Testing CBC
 	fmt.Println("=== CBC mode ===")
-	iv := utils.GenerateRandomByte(constant.MessageByteSize)
+	iv := utils.GenerateRandomByte(constant.MessageBlockByteSize)
+	fmt.Println("IV:", string(iv))
 	cipherText = cipherMode.EncryptCBC(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
 	plainText = cipherMode.DecryptCBC(cipherText, key, BCA.DecryptionAlgorithm, iv)
@@ -36,7 +37,7 @@ func test() {
 
 	// Testing CFB
 	fmt.Println("=== CFB mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageByteSize) // Reuse the generated iv
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv
 	cipherText = cipherMode.EncryptCFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
 	plainText = cipherMode.DecryptCFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
@@ -45,7 +46,7 @@ func test() {
 
 	// Testing OFB
 	fmt.Println("=== OFB mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageByteSize) // Reuse the generated iv (assuming valid for OFB)
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for OFB)
 	cipherText = cipherMode.EncryptOFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
 	plainText = cipherMode.DecryptOFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
@@ -54,7 +55,7 @@ func test() {
 
 	// Testing CTR
 	fmt.Println("=== CTR mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageByteSize) // Reuse the generated iv (assuming valid for CTR)
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for CTR)
 	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
 	plainText = cipherMode.DecryptCounter(cipherText, key, BCA.DecryptionAlgorithm, iv)

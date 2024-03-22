@@ -27,7 +27,7 @@ func TransmissionDecoding(text string) []byte{
 	return decoded
 }
 
-// split either plaintext or ciphertext into blocks. if there are leftover, fill with 0
+// split either plaintext or ciphertext into blocks. fill the start with byte(0) if the block is not full
 func TextToBlocks(text []byte) [][]byte {
 	blockSize := constant.MessageBlockByteSize
 	fillerByte := byte(0)
