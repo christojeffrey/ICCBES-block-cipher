@@ -1,4 +1,4 @@
-import { component$, Resource, useContext, useResource$ } from "@builder.io/qwik";
+import { $, component$, Resource, useContext, useResource$ } from "@builder.io/qwik";
 import { buttonContext, configContext, inputContext, modeSpecificConfigContext } from "~/states";
 
 export const OutputBox = component$(() => {
@@ -7,8 +7,28 @@ export const OutputBox = component$(() => {
   const button = useContext(buttonContext);
   const config = useContext(configContext);
   const modeSpecificConfig = useContext(modeSpecificConfigContext);
-  console.log(input.value);
+  const onDownload = $((resultText: string) => {
+    const blob = new Blob([resultText], { type: "octet/stream" });
 
+    // blob to binary
+    const blobToUint8Array = async (blob: Blob) => {
+      const buffer = await blob.arrayBuffer();
+      // to string
+      const stringified = new TextDecoder().decode(buffer);
+      // convert to array of uint8 char code
+      const numberArr = stringified.split("").map((v) => v.charCodeAt(0));
+      const uint8Arr = new Uint8Array(numberArr);
+      return uint8Arr;
+    };
+    blobToUint8Array(blob).then((uint8Arr) => {
+      const url = URL.createObjectURL(new Blob([uint8Arr], { type: "octet/stream" }));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "exported_file.bin";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  });
   const result = useResource$<
     | {
         result: string;
@@ -58,6 +78,15 @@ export const OutputBox = component$(() => {
                       );
                     }
                   })}
+                  {/* save as file */}
+                  <button
+                    class="border-2 mt-4 hover:shadow hover:bg-gray-50"
+                    onClick$={() => {
+                      onDownload(atob(result.result));
+                    }}
+                  >
+                    Save as file
+                  </button>
                 </>
               )}
             </>
