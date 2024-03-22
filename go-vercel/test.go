@@ -9,7 +9,7 @@ import (
 	"ICCBES/lib/utils"
 )
 
-func a() {
+func test() {
 	key := utils.GenerateRandomByte(constant.KeyByteSize)
 	message := utils.GenerateRandomByte(constant.MessageByteSize)
 
@@ -37,27 +37,27 @@ func a() {
 
 	// Testing CFB
 	fmt.Println("=== CFB mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize)
 	cipherText = cipherMode.EncryptCFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.DecryptCFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	plainText = cipherMode.DecryptCFB(cipherText, key, BCA.EncryptionAlgorithm, iv) // in CFB, both encryption and decryption uses encryption algorithm 
 	fmt.Println("PlainText:", string(plainText))
 	utils.PrintDivider()
 
 	// Testing OFB
 	fmt.Println("=== OFB mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for OFB)
+	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize)
 	cipherText = cipherMode.EncryptOFB(message, key, BCA.EncryptionAlgorithm, iv)
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.DecryptOFB(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	plainText = cipherMode.EncryptOFB(cipherText, key, BCA.EncryptionAlgorithm, iv) // in OFB, encryption and decryption are the same
 	fmt.Println("PlainText:", string(plainText))
 	utils.PrintDivider()
 
 	// Testing CTR
 	fmt.Println("=== CTR mode ===")
-	iv = utils.GenerateRandomByte(constant.MessageBlockByteSize) // Reuse the generated iv (assuming valid for CTR)
-	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, iv)
+	counter := utils.GenerateRandomByte(constant.MessageBlockByteSize) 
+	cipherText = cipherMode.EncryptCounter(message, key, BCA.EncryptionAlgorithm, counter) // in CTR, encryption and decryption are the same
 	fmt.Println("CipherText:", string(cipherText))
-	plainText = cipherMode.DecryptCounter(cipherText, key, BCA.DecryptionAlgorithm, iv)
+	plainText = cipherMode.EncryptCounter(cipherText, key, BCA.EncryptionAlgorithm, counter)
 	fmt.Println("PlainText:", string(plainText))
 }

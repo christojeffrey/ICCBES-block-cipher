@@ -27,7 +27,7 @@ func main() {
 		decryptionMode := c.Param("decryptionMode")
 
 		// validate mode
-		validModes := []string{"ecb", "cbc"}
+		validModes := []string{"ecb", "cbc", "cfb", "ofb", "ctr"}
 		isValidMode := false
 		for _, validMode := range validModes {
 			if blockCipherMode == validMode {
@@ -51,14 +51,17 @@ func main() {
 		// give to handler
 		// time the algorithm
 		timeElapsed := time.Now().UnixMilli()
-		if(blockCipherMode == "cbc") {
-			result = handler.CBCHandler(decryptionMode, jsonBody)
-		}
-		if(blockCipherMode == "ecb") {
+		if(blockCipherMode == "cbc" || blockCipherMode == "cfb" || blockCipherMode == "ofb") {
+			result = handler.CbcOfbCfbHandler(blockCipherMode, decryptionMode, jsonBody)
+		}else if(blockCipherMode == "ecb") {
 			result = handler.ECBHandler(decryptionMode, jsonBody)
+		}else { // counter
+			result = handler.CounterHandler(decryptionMode, jsonBody)
 		}
 		timeElapsed = time.Now().UnixMilli() - timeElapsed
 		result["timeElapsed"] = timeElapsed
+
+		
 
 		return c.JSON(http.StatusOK, result)
 	})
