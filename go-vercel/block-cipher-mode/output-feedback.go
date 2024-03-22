@@ -1,74 +1,41 @@
 package blockCipherMode
 
-import (
-	"ICCBES/lib" // Likely incorrect, replace with the actual package name
-	"ICCBES/lib/utils"
-)
+import "ICCBES/lib"
 
+// EncryptOFB encrypts plaintext using OFB mode
 func EncryptOFB(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Split plainText into blocks
-	plainTextBlocks := utils.TextToBlocks(plainText)
-	blockLength := len(plainTextBlocks)
-	cipherTextBlocks := make([][]byte, blockLength)
-	prevCipherBlock := iv
-
-	for i := 0; i < blockLength; i++ {
-		currentBlock := plainTextBlocks[i]
-
-		// Generate keystream (entire encrypted previous block)
-		keystream := encryptOFBBlock(prevCipherBlock, encryptionAlgorithm)
-
-		// Encrypt block using XOR with keystream
-		currentBlock = utils.DoBitXOR(currentBlock, keystream)
-
-		// Save the result
-		cipherTextBlocks[i] = currentBlock
-		prevCipherBlock = keystream // Update for next iteration (OFB characteristic)
+	// Initialize ciphertext slice
+	cipherText := make([]byte, len(plainText))
+	// Initialize feedback register with IV
+	feedback := make([]byte, len(iv))
+	copy(feedback, iv)
+	// Encrypt plaintext byte by byte using OFB mode
+	for i, b := range plainText {
+		// Encrypt feedback register
+		encryptedFeedback := encryptionAlgorithm(feedback, key)
+		// XOR plaintext byte with encrypted feedback
+		cipherText[i] = encryptedFeedback[0] ^ b
+		// Update feedback register with encrypted feedback
+		copy(feedback, encryptedFeedback)
 	}
-
-	// Merge blocks into one
-	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
-
 	return cipherText
 }
 
-func DecryptOFB(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
-	// Split cipherText into blocks
-	cipherTextBlocks := utils.TextToBlocks(cipherText)
-	blockLength := len(cipherTextBlocks)
-	plainTextBlocks := make([][]byte, blockLength)
-	prevCipherBlock := iv
-
-	for i := 0; i < blockLength; i++ {
-		currentBlock := cipherTextBlocks[i]
-
-		// Generate keystream (entire encrypted previous block)
-		keystream := decryptOFBBlock(prevCipherBlock, decryptionAlgorithm)
-
-		// Decrypt block using XOR with keystream
-		currentBlock = utils.DoBitXOR(currentBlock, keystream)
-
-		// Save the result
-		plainTextBlocks[i] = currentBlock
-		prevCipherBlock = keystream // Update for next iteration (OFB characteristic)
+// DecryptOFB decrypts ciphertext using OFB mode
+func DecryptOFB(cipherText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
+	// Initialize plaintext slice
+	plainText := make([]byte, len(cipherText))
+	// Initialize feedback register with IV
+	feedback := make([]byte, len(iv))
+	copy(feedback, iv)
+	// Decrypt ciphertext byte by byte using OFB mode
+	for i, b := range cipherText {
+		// Encrypt feedback register
+		encryptedFeedback := encryptionAlgorithm(feedback, key)
+		// XOR ciphertext byte with encrypted feedback
+		plainText[i] = encryptedFeedback[0] ^ b
+		// Update feedback register with encrypted feedback
+		copy(feedback, encryptedFeedback)
 	}
-
-	// Merge blocks into one
-	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText))
 	return plainText
-}
-
-func encryptOFBBlock(prevCipherBlock []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
-	// Encrypt previous cipher block
-	encryptedBlock := encryptionAlgorithm(prevCipherBlock, []byte{})
-
-	// Return entire encrypted block as keystream
-	return encryptedBlock
-}
-func decryptOFBBlock(prevCipherBlock []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
-	// Encrypt previous cipher block
-	encryptedBlock := decryptionAlgorithm(prevCipherBlock, []byte{})
-
-	// Return entire encrypted block as keystream
-	return encryptedBlock
 }

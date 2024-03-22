@@ -5,83 +5,40 @@ import (
 	"ICCBES/lib/utils"
 )
 
-func EncryptCTR(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Initialize counter (can be a byte slice or integer)
-	counter := iv
-
-	// Split plainText into blocks 
-	plainTextBlocks := utils.TextToBlocks(plainText)
-	blockLength := len(plainTextBlocks)
-	cipherTextBlocks := make([][]byte, blockLength)
-
-	for i := 0; i < blockLength; i++ {
-		currentBlock := plainTextBlocks[i]
-
-		// Generate keystream (encrypt counter)
-		keystream := encryptCTRBlock(counter, encryptionAlgorithm)
-
-		// Encrypt block using XOR with keystream
-		currentBlock = utils.DoBitXOR(currentBlock, keystream)
-
-		// Save the result
-		cipherTextBlocks[i] = currentBlock
-
-		// Increment counter for next iteration (specific logic needed)
-		counter = incrementCounter(counter) // Function to handle counter increment
+// EncryptCTR encrypts plaintext using CTR mode
+func EncryptCounter(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
+	// Initialize ciphertext slice
+	cipherText := make([]byte, len(plainText))
+	// Initialize counter with IV
+	counter := make([]byte, len(iv))
+	copy(counter, iv)
+	// Encrypt plaintext byte by byte using CTR mode
+	for i, b := range plainText {
+		// Encrypt counter block
+		encryptedCounter := encryptionAlgorithm(counter, key)
+		// XOR plaintext byte with encrypted counter block
+		cipherText[i] = encryptedCounter[0] ^ b
+		// Increment counter
+		utils.IncrementCounter(counter)
 	}
-
-	// Merge blocks into one
-	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
-
 	return cipherText
 }
 
-func DecryptCTR(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
-	// Split cipherText into blocks 
-	cipherTextBlocks := utils.TextToBlocks(cipherText)
-	blockLength := len(cipherTextBlocks)
-	plainTextBlocks := make([][]byte, blockLength)
-	counter := iv
-
-	for i := 0; i < blockLength; i++ {
-		currentBlock := cipherTextBlocks[i]
-
-		// Generate keystream (encrypt counter)
-		keystream := decryptCTRBlock(counter, decryptionAlgorithm)
-
-		// Decrypt block using XOR with keystream
-		currentBlock = utils.DoBitXOR(currentBlock, keystream)
-
-		// Save the result
-		plainTextBlocks[i] = currentBlock
-
-		// Increment counter for next iteration (specific logic needed)
-		counter = incrementCounter(counter) // Function to handle counter increment
+// DecryptCTR decrypts ciphertext using CTR mode
+func DecryptCounter(cipherText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
+	// Initialize plaintext slice
+	plainText := make([]byte, len(cipherText))
+	// Initialize counter with IV
+	counter := make([]byte, len(iv))
+	copy(counter, iv)
+	// Decrypt ciphertext byte by byte using CTR mode
+	for i, b := range cipherText {
+		// Encrypt counter block
+		encryptedCounter := encryptionAlgorithm(counter, key)
+		// XOR ciphertext byte with encrypted counter block
+		plainText[i] = encryptedCounter[0] ^ b
+		// Increment counter
+		utils.IncrementCounter(counter)
 	}
-
-	// Merge blocks into one
-	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText))
 	return plainText
-}
-
-func encryptCTRBlock(counter []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
-	// Encrypt the counter block
-	encryptedBlock := encryptionAlgorithm(counter, []byte{})
-
-	// Return the entire encrypted block as keystream
-	return encryptedBlock
-}
-func decryptCTRBlock(counter []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
-	// Encrypt the counter block
-	encryptedBlock := decryptionAlgorithm(counter, []byte{})
-
-	// Return the entire encrypted block as keystream
-	return encryptedBlock
-}
-
-// Implement incrementCounter function based on your counter type (byte slice or integer)
-func incrementCounter(counter []byte) []byte {
-	// Implement logic to increment the counter byte slice (e.g., carry over)
-	// ...
-	return counter
 }

@@ -2,75 +2,40 @@ package blockCipherMode
 
 import (
 	"ICCBES/lib"
-	"ICCBES/lib/utils"
 )
 
-const (
-	CFB_MODE = "CFB"
-)
-
+// EncryptCFB encrypts plaintext using CFB mode
 func EncryptCFB(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Split plainText into blocks
-	plainTextBlocks := utils.TextToBlocks(plainText)
-	blockLength := len(plainTextBlocks)
-	cipherTextBlocks := make([][]byte, blockLength)
-	prevCipherBlock := iv
-	for i := 0; i < blockLength; i++ {
-		currentBlock := plainTextBlocks[i]
-
-		// Generate keystream
-		keystream := encryptCFBBlock(prevCipherBlock, encryptionAlgorithm)
-
-		// Encrypt block
-		currentBlock = utils.DoBitXOR(currentBlock, keystream)
-		prevCipherBlock = currentBlock
-
-		// Save the result
-		cipherTextBlocks[i] = currentBlock
+	// Initialize ciphertext slice
+	cipherText := make([]byte, len(plainText))
+	// Initialize feedback block with IV
+	feedbackBlock := iv
+	// Encrypt plaintext byte by byte using CFB mode
+	for i, b := range plainText {
+		// Encrypt feedback block
+		encryptedFeedbackBlock := encryptionAlgorithm(feedbackBlock, key)
+		// XOR plaintext byte with encrypted feedback block
+		cipherText[i] = encryptedFeedbackBlock[0] ^ b
+		// Update feedback block by removing the first byte and appending the ciphertext byte
+		feedbackBlock = append(feedbackBlock[1:], cipherText[i])
 	}
-
-	// Merge blocks into one
-	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText));
-
 	return cipherText
 }
 
+// DecryptCFB decrypts ciphertext using CFB mode
 func DecryptCFB(cipherText []byte, key []byte, decryptionAlgorithm lib.DecryptionAlgorithm, iv []byte) []byte {
-	// Split cipherText into blocks
-	cipherTextBlocks := utils.TextToBlocks(cipherText)
-	blockLength := len(cipherTextBlocks)
-	plainTextBlocks := make([][]byte, blockLength)
-	prevCipherBlock := iv
-	for i := 0; i < blockLength; i++ {
-		currentBlock := cipherTextBlocks[i]
-
-		// Generate keystream
-		keystream := decryptCFBBlock(prevCipherBlock, decryptionAlgorithm)
-
-		// Decrypt block
-		currentBlock = utils.DoBitXOR(currentBlock, keystream)
-		prevCipherBlock = cipherTextBlocks[i]
-
-		// Save the result
-		plainTextBlocks[i] = currentBlock
+	// Initialize plaintext slice
+	plainText := make([]byte, len(cipherText))
+	// Initialize feedback block with IV
+	feedbackBlock := iv
+	// Decrypt ciphertext byte by byte using CFB mode
+	for i, b := range cipherText {
+		// Encrypt feedback block
+		encryptedFeedbackBlock := decryptionAlgorithm(feedbackBlock, key)
+		// XOR ciphertext byte with encrypted feedback block
+		plainText[i] = encryptedFeedbackBlock[0] ^ b
+		// Update feedback block by removing the first byte and appending the decrypted ciphertext byte
+		feedbackBlock = append(feedbackBlock[1:], b)
 	}
-
-	// Merge blocks into one
-	plainText := utils.MergeBlocksIntoOneString(plainTextBlocks, len(cipherText))
 	return plainText
-}
-
-func encryptCFBBlock(prevCipherBlock []byte, encryptionAlgorithm lib.EncryptionAlgorithm) []byte {
-	// Encrypt previous cipher block
-	encryptedBlock := encryptionAlgorithm(prevCipherBlock, []byte{})
-
-	// Return first N bits of encrypted block
-	return encryptedBlock[:len(prevCipherBlock)]
-}
-func decryptCFBBlock(prevCipherBlock []byte, decryptionAlgorithm lib.DecryptionAlgorithm) []byte {
-	// Encrypt previous cipher block
-	encryptedBlock := decryptionAlgorithm(prevCipherBlock, []byte{})
-
-	// Return first N bits of encrypted block
-	return encryptedBlock[:len(prevCipherBlock)]
 }
