@@ -24,7 +24,6 @@ func TransmissionEncoding(text []byte) string{
 func TransmissionDecoding(text string) []byte{
 	// return []byte(text)
 	decoded, _ := base64.StdEncoding.DecodeString(text)
-	println("decoded: ", string(decoded))
 	return decoded
 }
 
@@ -91,7 +90,6 @@ func MergeBlocksIntoOneString(blocks [][]byte, outputTextLength int) []byte{
 	}
 
 	// remove byte(0) in front of the outputText
-	newOutputText := make([]byte, outputTextLength)
 	// find start from
 	startFrom := 0
 	for i := 0; i < len(outputText); i++ {
@@ -100,7 +98,7 @@ func MergeBlocksIntoOneString(blocks [][]byte, outputTextLength int) []byte{
 			break
 		}
 	}
-	newOutputText = outputText[startFrom:]
+	newOutputText := outputText[startFrom:]
 	// return the result
 	return newOutputText
 
