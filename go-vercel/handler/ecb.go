@@ -36,7 +36,6 @@ func ECBHandler(mode string, body map[string]interface{}) map[string]interface{}
 	} else {
 		result = cipherMode.DecryptECB(text, key, BCA.DecryptionAlgorithm)
 	}
-	println("RESULTNYA", result)
 	return map[string]interface{}{"result": utils.TransmissionEncoding(result), "key" : string(key), "iv": string(iv)}
 }
 // if autofil is available, only check text
