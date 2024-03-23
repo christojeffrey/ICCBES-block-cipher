@@ -33,11 +33,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "ICCBES",
+  title: "NCBIT Block Cipher",
   meta: [
     {
-      name: "description",
-      content: "ICCBES description",
+      name: "NCBIT Block Cipher",
+      content: "The New Block Cipher In Town",
     },
   ],
 };
