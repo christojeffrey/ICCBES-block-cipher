@@ -9,6 +9,17 @@ to test, run
 ```bash
 go run ./test
 ```
+# How to run backend with docker
+1. Change the terminal current working directory to this folder.
+2. Build the image
+```bash
+docker build . --tag ncbit-be
+```
+3. Run the image in a container.
+```bash
+docker run --publish 1323:1323 ncbit-be
+```
+4. The backend is up on `http://localhost:1323`
 
 this folder contains the backend for IICBES.
 
