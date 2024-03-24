@@ -1,11 +1,21 @@
-import { component$, createContextId, useStore, useContextProvider, useContext } from "@builder.io/qwik";
+import { component$, useStore, useContextProvider } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import AppHeader from "~/components/app-header";
+import ConfigBox from "~/components/config-box";
+import InputBox from "~/components/input-box";
+import OutputBox from "~/components/output-box";
+import { buttonContext, configContext, inputContext, modeSpecificConfigContext } from "~/states";
 
-// Declare a context ID
-export const CTX = createContextId<{ type: string; value: string }>("inputText");
 export default component$(() => {
   const input = useStore({ type: "text", value: "" });
-  useContextProvider(CTX, input);
+  const button = useStore({ pressed: false });
+  const config = useStore({ blockCipherMode: "cbc", encryptionMode: "encrypt", autofill: false });
+  const modeSpecificConfig = useStore({});
+  useContextProvider(inputContext, input);
+  useContextProvider(buttonContext, button);
+  useContextProvider(configContext, config);
+  useContextProvider(modeSpecificConfigContext, modeSpecificConfig);
+
   return (
     <>
       <div class="md:h-screen flex flex-col p-3 gap-3">
@@ -21,57 +31,7 @@ export default component$(() => {
     </>
   );
 });
-const InputBox = component$(() => {
-  const input = useContext(CTX);
-  return (
-    <>
-      <div class="min-h-[25vh] md:h-full md:w-1/3 rounded-2xl bg-white p-3">
-        {/* heading */}
-        <div>input box</div>
-        <input
-          type="text"
-          value={input.value}
-          placeholder="tesadsf"
-          class="border-2 border-black"
-          onChange$={(e) => {
-            input.value = (e.target as HTMLInputElement).value;
-          }}
-        ></input>
-      </div>
-    </>
-  );
-});
 
-const ConfigBox = component$(() => {
-  return (
-    <>
-      <div class="min-h-[25vh] md:h-full md:w-1/3 rounded-2xl bg-white p-3">config box</div>
-    </>
-  );
-});
-const OutputBox = component$(() => {
-  return (
-    <>
-      <div class="min-h-[25vh] md:h-full md:w-1/3 rounded-2xl bg-white p-3">output box</div>
-    </>
-  );
-});
-
-function AppHeader() {
-  return (
-    <div class="flex justify-between">
-      <div>
-        <p class="text-xl">ICCBES Cipher</p>
-        <p class="text-md">Next AES</p>
-      </div>
-      <div class="text-right text-sm">
-        <div>
-          <a href="https://github.com/christojeffrey">@christojeffrey</a>
-        </div>
-      </div>
-    </div>
-  );
-}
 export const head: DocumentHead = {
   title: "ICCBES",
   meta: [

@@ -1,6 +1,10 @@
 package utils
 
-import "math/rand"
+import (
+	"ICCBES/lib/constant"
+	"encoding/base64"
+	"math/rand"
+)
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -13,19 +17,34 @@ func GenerateRandomByte(n int) []byte {
 	return b
 }
 
-// split either plaintext or ciphertext into blocks. if there are leftover, fill with 0
-func TextToBlocks(text []byte, blockSize int) [][]byte {
+func TransmissionEncoding(text []byte) string{
+	// return string(text)
+	return base64.StdEncoding.EncodeToString(text)
+}
+func TransmissionDecoding(text string) []byte{
+	// return []byte(text)
+	decoded, _ := base64.StdEncoding.DecodeString(text)
+	return decoded
+}
+
+// split either plaintext or ciphertext into blocks. fill the start with byte(0) if the block is not full
+func TextToBlocks(text []byte) [][]byte {
+	blockSize := constant.MessageBlockByteSize
 	fillerByte := byte(0)
 	// ceiling
 	blockLength := (len(text) + blockSize - 1) / blockSize
 	blocks := make([][]byte, blockLength)
+	totalSize := constant.MessageBlockByteSize * blockLength
+
+	counter := 0
 	for i := 0; i < blockLength; i++ {
 		// setup block to be encrypted
 		// if block is not full, fill with 0
 		block := make([]byte, blockSize)
 		for j := 0; j < blockSize; j++ {
-			if i*blockSize+j < len(text) {
-				block[j] = text[i*blockSize+j]
+			if totalSize - (i*blockSize+j) <= len(text) {
+				block[j] = text[counter]
+				counter++
 			} else {
 				block[j] = fillerByte
 			}
@@ -60,6 +79,30 @@ func PrintDivider() {
 	println("--------------------------------------------------")
 }
 
+func MergeBlocksIntoOneString(blocks [][]byte, outputTextLength int) []byte{
+	// merge blocks into one
+	outputText := make([]byte, constant.MessageBlockByteSize * len(blocks))
+
+	for p := 0; p < constant.MessageBlockByteSize * len(blocks); p++ {
+		i := p / constant.MessageBlockByteSize;
+		j := p % constant.MessageBlockByteSize;
+		outputText[p] = blocks[i][j];			
+	}
+
+	// remove byte(0) in front of the outputText
+	// find start from
+	startFrom := 0
+	for i := 0; i < len(outputText); i++ {
+		if outputText[i] != byte(0) {
+			startFrom = i
+			break
+		}
+	}
+	newOutputText := outputText[startFrom:]
+	// return the result
+	return newOutputText
+
+}
 func IncrementCounter(counter []byte) {
 	// Find the rightmost non-maximum byte and increment it by one
 	for i := len(counter) - 1; i >= 0; i-- {

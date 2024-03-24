@@ -3,42 +3,42 @@ package blockCipherMode
 import (
 	"ICCBES/lib"
 	"ICCBES/lib/utils"
+	"time"
 )
 
-// EncryptCTR encrypts plaintext using CTR mode
-func EncryptCounter(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Initialize ciphertext slice
-	cipherText := make([]byte, len(plainText))
-	// Initialize counter with IV
-	counter := make([]byte, len(iv))
-	copy(counter, iv)
-	// Encrypt plaintext byte by byte using CTR mode
-	for i, b := range plainText {
-		// Encrypt counter block
-		encryptedCounter := encryptionAlgorithm(counter, key)
-		// XOR plaintext byte with encrypted counter block
-		cipherText[i] = encryptedCounter[0] ^ b
-		// Increment counter
-		utils.IncrementCounter(counter)
+// EncryptCTR encrypts plaintext using CTR mode. decrypt and encrypt is the same in counter mode
+func EncryptCounter(inputText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, counter []byte) []byte {	
+	startTime := time.Now()
+	// split inputText into blocks
+	inputTextBlocks := utils.TextToBlocks(inputText)
+	blockLength := len(inputTextBlocks)
+	outputTextBlocks := make([][]byte, blockLength)
+	encryptedCounter := counter
+	for i := 0; i < blockLength; i++ {
+		// encrypt counter with key
+		encryptedCounter = encryptionAlgorithm(encryptedCounter, key)
+		// XOR with inputText
+		outputTextBlocks[i] = utils.DoBitXOR(inputTextBlocks[i], encryptedCounter)
+		// increment counter
+		encryptedCounter = incrementCounter(encryptedCounter)
 	}
-	return cipherText
+	// merge blocks into one
+	outputText := utils.MergeBlocksIntoOneString(outputTextBlocks, len(inputText))
+	println("outputText: ", string(outputText))
+
+	elapsedTime := time.Since(startTime)
+	println("elapsed time EncryptCounter in ns: ", elapsedTime.Nanoseconds())
+	return outputText
 }
 
-// DecryptCTR decrypts ciphertext using CTR mode
-func DecryptCounter(cipherText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Initialize plaintext slice
-	plainText := make([]byte, len(cipherText))
-	// Initialize counter with IV
-	counter := make([]byte, len(iv))
-	copy(counter, iv)
-	// Decrypt ciphertext byte by byte using CTR mode
-	for i, b := range cipherText {
-		// Encrypt counter block
-		encryptedCounter := encryptionAlgorithm(counter, key)
-		// XOR ciphertext byte with encrypted counter block
-		plainText[i] = encryptedCounter[0] ^ b
-		// Increment counter
-		utils.IncrementCounter(counter)
+
+func incrementCounter(counter []byte)[]byte{
+	// add every byte in counter by 1
+	for i := len(counter) - 1; i >= 0; i-- {
+		counter[i]++
+		if counter[i] != 0 {
+			break
+		}
 	}
-	return plainText
+	return counter
 }

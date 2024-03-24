@@ -32,8 +32,13 @@ func F(key []byte, block []byte) []byte {
 
 	return block
 }
-
 // Encrypt the plainTextBlock using the key by feistel network
+// func EncryptionAlgorithm(plainTextBlock []byte, key []byte) []byte {
+// 	return plainTextBlock
+// }
+// func DecryptionAlgorithm(cipherTextBlock []byte, key []byte) []byte {
+// 	return cipherTextBlock
+// }
 func EncryptionAlgorithm(plainTextBlock []byte, key []byte) []byte {
 	// Divide the block
 	leftBlock, rightBlock := divideLeftRightBlock(plainTextBlock)

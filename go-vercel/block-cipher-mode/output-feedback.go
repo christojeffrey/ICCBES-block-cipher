@@ -1,41 +1,31 @@
 package blockCipherMode
 
-import "ICCBES/lib"
+import (
+	"ICCBES/lib"
+	"ICCBES/lib/utils"
+	"time"
+)
 
-// EncryptOFB encrypts plaintext using OFB mode
+// EncryptOFB encrypts plaintext using OFB mode. EFB only has encryption, decryption is the same as encryption
 func EncryptOFB(plainText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Initialize ciphertext slice
-	cipherText := make([]byte, len(plainText))
-	// Initialize feedback register with IV
-	feedback := make([]byte, len(iv))
-	copy(feedback, iv)
-	// Encrypt plaintext byte by byte using OFB mode
-	for i, b := range plainText {
-		// Encrypt feedback register
-		encryptedFeedback := encryptionAlgorithm(feedback, key)
-		// XOR plaintext byte with encrypted feedback
-		cipherText[i] = encryptedFeedback[0] ^ b
-		// Update feedback register with encrypted feedback
-		copy(feedback, encryptedFeedback)
+	startTime := time.Now()
+	// split plainText into blocks
+	plainTextBlocks := utils.TextToBlocks(plainText)
+	blockLength := len(plainTextBlocks)
+	cipherTextBlocks := make([][]byte, blockLength)
+	encryptedIV := iv
+	// Encrypt plaintext byte by byte using CFB mode
+	for i := 0; i < blockLength; i++ {
+		// encrypt iv with key
+		encryptedIV := encryptionAlgorithm(encryptedIV, key)
+		// update iv
+		// XOR with plaintext
+		cipherTextBlocks[i] = utils.DoBitXOR(plainTextBlocks[i], encryptedIV)
 	}
+	// merge blocks into one
+	cipherText := utils.MergeBlocksIntoOneString(cipherTextBlocks, len(plainText))
+	elapsedTime := time.Since(startTime)
+	println("elapsed time EncryptOFB in ns: ", elapsedTime.Nanoseconds())
 	return cipherText
 }
 
-// DecryptOFB decrypts ciphertext using OFB mode
-func DecryptOFB(cipherText []byte, key []byte, encryptionAlgorithm lib.EncryptionAlgorithm, iv []byte) []byte {
-	// Initialize plaintext slice
-	plainText := make([]byte, len(cipherText))
-	// Initialize feedback register with IV
-	feedback := make([]byte, len(iv))
-	copy(feedback, iv)
-	// Decrypt ciphertext byte by byte using OFB mode
-	for i, b := range cipherText {
-		// Encrypt feedback register
-		encryptedFeedback := encryptionAlgorithm(feedback, key)
-		// XOR ciphertext byte with encrypted feedback
-		plainText[i] = encryptedFeedback[0] ^ b
-		// Update feedback register with encrypted feedback
-		copy(feedback, encryptedFeedback)
-	}
-	return plainText
-}
