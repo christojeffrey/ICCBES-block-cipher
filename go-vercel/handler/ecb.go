@@ -23,11 +23,9 @@ func ECBHandler(mode string, body map[string]interface{}) map[string]interface{}
 	// handle autofill
 	if(isAutoFill){
 		key = utils.GenerateRandomByte(constant.KeyByteSize)
-		iv = utils.GenerateRandomByte(constant.MessageBlockByteSize)
 	}else{
 		// get text and iv from body
-		iv = []byte(body["iv"].(string))
-		key = []byte(body["key"].(string))
+	key = []byte(body["key"].(string))
 	}
 	text := utils.TransmissionDecoding(body["text"].(string))
 
@@ -38,7 +36,6 @@ func ECBHandler(mode string, body map[string]interface{}) map[string]interface{}
 	} else {
 		result = cipherMode.DecryptECB(text, key, BCA.DecryptionAlgorithm)
 	}
-
 	return map[string]interface{}{"result": utils.TransmissionEncoding(result), "key" : string(key), "iv": string(iv)}
 }
 // if autofil is available, only check text

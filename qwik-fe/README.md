@@ -70,3 +70,26 @@ bun build # or `bun build`
 ```
 
 # ICCBES-block-cipher
+
+## Bun Server
+
+This app has a minimal [Bun server](https://bun.sh/docs/api/http) implementation. After running a full build, you can preview the build using the command:
+
+```
+bun run serve
+```
+
+Then visit [http://localhost:3000/](http://localhost:3000/)
+
+## Node Server
+
+This app has a minimal zero-dependencies server. Using the built-in `http.createServer` API.
+This should be faster and less overhead than Express or other frameworks.
+
+After running a full build, you can preview the build using the command:
+
+```
+bun serve
+```
+
+Then visit [http://localhost:8080/](http://localhost:8080/)

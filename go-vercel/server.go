@@ -48,6 +48,7 @@ func main() {
 		}
 		var result map[string]interface{}
 		// give to handler
+		// time the algorithm
 		if(blockCipherMode == "cbc" || blockCipherMode == "cfb" || blockCipherMode == "ofb") {
 			result = handler.CbcOfbCfbHandler(blockCipherMode, decryptionMode, jsonBody)
 		}else if(blockCipherMode == "ecb") {
@@ -55,11 +56,9 @@ func main() {
 		}else { // counter
 			result = handler.CounterHandler(decryptionMode, jsonBody)
 		}
-
 		
 
 		return c.JSON(http.StatusOK, result)
-
 	})
 
 	e.Logger.Fatal(e.Start(":1323"))

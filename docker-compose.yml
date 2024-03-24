@@ -1,0 +1,18 @@
+services:
+  ncbit-fe:
+    image: ncbit-fe:latest
+    build:
+      context: ./qwik-fe
+      dockerfile: Dockerfile
+    ports:
+      - "5173:3000"
+    env_file:
+      - ./qwik-fe/.env
+
+  ncbit-be:
+    image: ncbit-be:latest
+    build:
+      context: ./go-vercel
+      dockerfile: Dockerfile
+    ports:
+      - "1323:1323"

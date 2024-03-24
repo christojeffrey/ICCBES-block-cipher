@@ -4,7 +4,7 @@ export default component$(() => {
   return (
     <div class="flex justify-between">
       <div>
-        <p class="text-xl">ICCBES Cipher</p>
+        <p class="text-xl">NCBIT Block Cipher</p>
         <p class="text-md">Next AES</p>
       </div>
       <div class="text-right text-sm">
