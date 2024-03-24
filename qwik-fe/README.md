@@ -8,9 +8,9 @@
 
 ```bash
 # run this first to install. check bun's website on how to install bun.
-bun install
+bun install or npm run i
 
-bun start
+bun start or npm run start
 ``
 
 ## Project Structure
@@ -48,7 +48,7 @@ bun qwik add # or `bun qwik add`
 Development mode uses [Vite's development server](https://vitejs.dev/). The `dev` command will server-side render (SSR) the output during development.
 
 ```shell
-npm start # or `bun start`
+bun start # or `npm run start`
 ```
 
 > Note: during dev mode, Vite may request a significant number of `.js` files. This does not represent a Qwik production build.
@@ -58,7 +58,7 @@ npm start # or `bun start`
 The preview command will create a production build of the client modules, a production build of `src/entry.preview.tsx`, and run a local server. The preview server is only for convenience to preview a production build locally and should not be used as a production server.
 
 ```shell
-bun preview # or `bun preview`
+bun preview # or `npm run preview`
 ```
 
 ## Production
@@ -66,7 +66,7 @@ bun preview # or `bun preview`
 The production build will generate client and server modules by running both client and server build commands. The build command will use Typescript to run a type check on the source code.
 
 ```shell
-bun build # or `bun build`
+bun build # or `npm run build`
 ```
 
 # ICCBES-block-cipher
@@ -89,7 +89,7 @@ This should be faster and less overhead than Express or other frameworks.
 After running a full build, you can preview the build using the command:
 
 ```
-bun serve
+node serve
 ```
 
 Then visit [http://localhost:8080/](http://localhost:8080/)
